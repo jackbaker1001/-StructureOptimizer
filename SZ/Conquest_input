@@ -1,0 +1,43 @@
+IO.Title    bulk Si 
+IO.Coordinates    StretchSiCell.in
+IO.FractionalCoordinates T 
+IO.Iprint 1
+
+## General Parameters
+General.NumberOfSpecies 1
+General.PseudopotentialType  hamann
+General.FunctionalType 1
+General.PartitionMethod  Hilbert 
+
+## Moving Atoms
+AtomMove.TypeOfRun static
+AtomMove.OptCell T
+AtomMove.OptCell.Constraint none
+AtomMove.OptCell.EnTol 0.5e-6
+
+## Basis Sets
+Basis.BasisSet PAOs
+
+## Finding Density Matrix 
+DM.SolutionMethod diagon
+Diag.MPMesh   T
+Diag.MPMeshX 6
+Diag.MPMeshY 6
+Diag.MPMeshZ 6
+
+## Energy Minimisation
+minE.SCTolerance 1e-7
+minE.SelfConsistent F
+
+##Integration Grid
+Grid.GridCutoff 120
+
+%block ChemicalSpeciesLabel
+ 1  28.09  Si
+%endblock
+
+%block Si
+Atom.ValenceCharge 4.00
+Atom.NumberOfSupports 4
+Atom.SupportFunctionRange 7.83
+%endblock
