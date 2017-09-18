@@ -17,7 +17,7 @@ class ConquestWrapper(object):
     def runConquest(self):
         os.chdir(wd)
         os.system("mpirun -np %d -map-by node %s" % (self.numProc, self.binPath))
-        os.chdir("../")
+        os.chdir("../../StructureOptimizer/")
 
 if __name__ == "__main__":
     CQrun = ConquestWrapper(binPath, numProc, wd)

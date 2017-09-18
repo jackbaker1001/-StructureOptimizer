@@ -1,6 +1,7 @@
 from src.CQReader import ConquestReader
 from input import *
 import numpy as np
+import os
 
 """
 Author: Jack S. Baker
@@ -15,8 +16,8 @@ class ConquestWriter(ConquestReader):
     def __init__(self):
         super(ConquestWriter, self).__init__(wd)
 
-    def writeCoord(self, writeBoxDims=True, writeAtomPos=True,
-                   latVec=None, newCoord=None):
+    def writeCoord(self, dynamics, writeBoxDims=True, writeAtomPos=True,
+                   latVec=None, newCoord=None, appendCoords=True, funcCall=None):
         # Deals only with fractional coordinates
         self.openFiles(openCQOut=False)
         lines = np.array(self.coords.readlines(), dtype=object)
@@ -30,7 +31,8 @@ class ConquestWriter(ConquestReader):
                     currLine = lines[ilnum]
                     currLine = currLine.split()
                     for ipos in range(3):
-                        currLine[ipos] = str(newCoord[ilnum - 4, ipos]/latVec[ipos])
+                        if dynamics[ilnum - 4, ipos] == True:
+                            currLine[ipos] = str(newCoord[ilnum - 4, ipos]/latVec[ipos])
                     currLine.append("\n")
                     currLine = "  ".join(currLine)
                     lines[ilnum] = currLine
@@ -38,6 +40,16 @@ class ConquestWriter(ConquestReader):
         self.coords.seek(0)
         self.coords.writelines(lines)
         self.close(closeCQOut=False)
+        if appendCoords:
+            os.chdir(wd)
+            with open("UpdatedAtoms.dat", "a") as UAD:
+                oldLines = lines
+                if funcCall is not None:
+                    UAD.write("Coordinates for function call %d:\n\n" % (funcCall))
+                UAD.writelines(oldLines)
+                UAD.writelines(["\n", "\n"])
+            os.chdir("../../StructureOptimizer")
+
 
 if __name__ == "__main__":
     CQw = ConquestWriter()

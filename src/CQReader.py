@@ -59,8 +59,16 @@ class ConquestReader(object):
                 self.rCellZ = float(line.split()[2])
             elif iline == 3:
                 self.numAtoms = int(line)
+                self.dynamics = np.ones((self.numAtoms, 3), dtype=bool)
             else:
-                coord = line.split()[:3]
+                coordAndDyn = line.split()
+                coord = coordAndDyn[:3]
+                dyns = coordAndDyn[4:]
+                for idyn in range(len(dyns)):
+                    if dyns[idyn] == 'T':
+                        self.dynamics[iline-4, idyn] = True
+                    else:
+                        self.dynamics[iline-4, idyn] = False
                 allCoords.append(coord)
         self.coordArray = np.array(allCoords, dtype=float)
 
@@ -73,15 +81,21 @@ class ConquestReader(object):
 
     def getForces(self):
         self.openFiles(openCoords=False)
-        forceComps = np.zeros([self.numAtoms, 3])
+        allForceComps = np.zeros([self.numAtoms, 3])
+        forceComps = []
         for ilnum, line in enumerate(self.CQOut):
             if "Atom   X              Y              Z" in line.strip():
                 for iatom in range(self.numAtoms):
                     forces = next(self.CQOut)
                     forces = forces.split()[1:]
                     for iforce in range(len(forces)):
-                        forceComps[iatom, iforce] = float(forces[iforce])
-        self.forces = forceComps
+                        force = float(forces[iforce])
+                        allForceComps[iatom, iforce] = force
+                        if self.dynamics[iatom, iforce] == True:
+                            forceComps.append(force)
+        self.allForces = -allForceComps
+        self.forces = -np.array(forceComps, dtype=np.float64)
+
 
     def getStress(self):
         self.openFiles(openCoords=False)
