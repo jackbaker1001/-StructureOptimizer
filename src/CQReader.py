@@ -1,7 +1,6 @@
 from input import *
 import re
 import glob
-import os
 import numpy as np
 
 """
@@ -20,10 +19,9 @@ class ConquestReader(object):
 
     def openFiles(self, openCQOut=True, openCoords=True):
         if openCQOut:
-            self.CQOut = open('/'.join([self.CQWD, self.CQOutFile]), 'r')
+            self.CQOut = open(self.CQOutFile, 'r')
         if openCoords:
             if self.coordFile == "*.in":
-                os.chdir(self.CQWD)
                 dotInFiles = []
                 for CQWD_file in glob.glob(self.coordFile):
                     dotInFiles.append(CQWD_file)
@@ -32,11 +30,10 @@ class ConquestReader(object):
                     print("Specify the full file name with coordFile.")
                     exit()
                 else:
-                    os.chdir('../')
                     self.coordFile = dotInFiles[0]
-                    self.coords = open('/'.join([self.CQWD, self.coordFile]), 'r+')
+                    self.coords = open(self.coordFile, 'r+')
             else:
-                self.coords = open('/'.join([CQWD, coordFile]), 'r+')
+                self.coords = open(self.coordFile, 'r+')
 
     def getTotalEnergy(self):
         self.openFiles(openCoords=False)

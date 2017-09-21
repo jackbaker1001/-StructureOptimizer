@@ -41,14 +41,12 @@ class ConquestWriter(ConquestReader):
         self.coords.writelines(lines)
         self.close(closeCQOut=False)
         if appendCoords:
-            os.chdir(wd)
             with open("UpdatedAtoms.dat", "a") as UAD:
                 oldLines = lines
                 if funcCall is not None:
                     UAD.write("Coordinates for function call %d:\n\n" % (funcCall))
                 UAD.writelines(oldLines)
                 UAD.writelines(["\n", "\n"])
-            os.chdir("../../StructureOptimizer")
 
 
 if __name__ == "__main__":

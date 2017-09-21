@@ -1,10 +1,12 @@
 
 # Select directory with Conquest files
-wd = "/homes/jbaker/Documents/programming/Conquest/optTests/BFGS_SZP_Tet"
+wd = "/home/ucapjsb/Scratch/SmallSurfaceDefects/BulkTests/TMPPs/DZP/DZP_opt_cubic"
 # Path to desired Conquest binary
-binPath = "~jbaker/bin/Conquest_latest"
-# Number of MPI processes
+binPath = "/home/ucapjsb/Scratch/bin/Conquest_latest"
+# Number of MPI processes (does nothing on thomas. Defined in .sh script)
 numProc = 5
+# Computing platform
+platform = "Thomas"
 
 
 optAtomPos = True

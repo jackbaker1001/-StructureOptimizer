@@ -9,15 +9,19 @@ Contains: class: ConquestWrapper
 
 class ConquestWrapper(object):
 
-    def __init__(self, binPath, numProc, wd):
+    def __init__(self, binPath, numProc, wd, platform="cluster"):
         self.binPath = binPath
         self.numProc = numProc
         self.wd = wd
+	self.platform = platform
 
     def runConquest(self):
         os.chdir(wd)
-        os.system("mpirun -np %d -map-by node %s" % (self.numProc, self.binPath))
-        os.chdir("../../StructureOptimizer/")
+	if platform == "cluster":
+            os.system("mpirun -np %d -map-by node %s" % (self.numProc, self.binPath))
+            os.chdir("../../StructureOptimizer/")
+        elif platform == "Thomas"
+            os.system("gerun %s" % (self.binPath))
 
 if __name__ == "__main__":
     CQrun = ConquestWrapper(binPath, numProc, wd)

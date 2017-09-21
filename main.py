@@ -8,8 +8,9 @@ import numpy as np
 import sys
 import os
 
-os.system("rm " + wd + "/structureOptimizer.out")
-sys.stdout = open(wd + "/structureOptimizer.out", "a")
+os.chdir(wd)
+os.system("rm structureOptimizer.out")
+sys.stdout = open("structureOptimizer.out", "a")
 
 # Initialization requirements
 CQr = ConquestReader(wd)
