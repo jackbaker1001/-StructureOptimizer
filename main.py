@@ -52,19 +52,16 @@ elif optCell and optAtomPos:
 if optMethod == "L-BFGS-B":
     methodOptions = {"factr": lbfgsb_factr, "ftol": enTol, "gtol": gradTol,
                      "disp": True, "maxiter": maxIter}
-elif optMethod == "BFGS":
+elif optMethod == "BFGS" or optMethod == "CG":
     methodOptions = {"gtol": gradTol, "disp": True, "maxiter": maxIter}
 elif optMethod == "Newton-CG":
-    methodOptions = {"xtol": enTol, "disp": True, "maxiter": maxIter}
+    methodOptions = {"xtol": coordTol, "disp": True, "maxiter": maxIter}
 elif optMethod == "debug": 
-    #CQw.writeCoord(dynamics = CQr.dynamics, latVec = [10.00000, 10.00000, 10.00000],
-    #               newCoord = np.array([[0.23, 0.5, 0.5], [0.24, 0.5, 0.5], [0.25, 0.5, 0.5],
-    #                                   [0.26, 0.5, 0.5], [0.27, 0.5, 0.5], [0.28, 0.5, 0.5]
-    #                               , [0.29, 0.5, 0.5], [0.30, 0.2, 0.5]]))
     pass
+
 # Enter scipy wrapper for minimizers
 if optMethod != "debug":
     opt = minimize(fun = objFunc, x0=initCondit, jac=True,
                    method=optMethod, options=methodOptions)
-    print("minumum total energy reached at %.8f" % (opt.f))
+    print("minimization terminated)
 

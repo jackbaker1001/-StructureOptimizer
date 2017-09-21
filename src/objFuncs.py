@@ -71,7 +71,7 @@ def E_atomPos(coords):
     print("RMS force of MOVING atoms (Ha/Bohr)")
     print(rmsForce)
     print("Total Energy = %.8f Ha" % (CQr.E))
-    os.system("cat " + wd + "/Conquest_out >> " + wd + "/CQOutHistory")
+    #os.system("cat " + wd + "/Conquest_out >> " + wd + "/CQOutHistory")
     # return flattened gradient information also
     sys.stdout.flush()
     return CQr.E, forces
