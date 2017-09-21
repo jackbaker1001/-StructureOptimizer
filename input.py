@@ -6,7 +6,7 @@ binPath = "~jbaker/bin/Conquest_latest"
 # Number of MPI processes (does nothing on thomas. Defined in .sh script)
 numProc = 5
 # Computing platform
-platform = "Thomas"
+platform = "cluster"
 
 
 optAtomPos = True

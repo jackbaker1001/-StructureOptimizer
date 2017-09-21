@@ -1,6 +1,5 @@
 from src.CQWriter import ConquestWriter
 from src.CQReader import ConquestReader
-from src.CQRun import ConquestWrapper
 from src.objFuncs import *
 from input import *
 from scipy.optimize import minimize

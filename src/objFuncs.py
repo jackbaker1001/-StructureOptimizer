@@ -17,7 +17,7 @@ funcEvals = 0
 def E_boxDims(boxDims):
     CQr = ConquestReader(wd)
     CQw = ConquestWriter()
-    simulation = ConquestWrapper(binPath, numProc, wd)
+    simulation = ConquestWrapper(binPath, numProc, wd, platform)
     CQw.writeCoord(dynamics=CQr.dynamics, writeAtomPos=False, latVec=boxDims)
     CQw.close(closeCQOut=False)
     simulation.runConquest()
@@ -42,7 +42,7 @@ def E_atomPos(coords):
     CQr = ConquestReader(wd)
     CQr.getCoords()
     CQw = ConquestWriter()
-    simulation = ConquestWrapper(binPath, numProc, wd)
+    simulation = ConquestWrapper(binPath, numProc, wd, platform)
     # put coordinates in correct format for writer
     conditCoord = np.empty((CQr.numAtoms, 3), dtype=np.float64)
     count = 0
@@ -82,7 +82,7 @@ def E_atomPosBoxDim(coordsAndBoxDims):
     CQr = ConquestReader(wd)
     CQw = ConquestWriter()
     CQr.getCoords()
-    simulation = ConquestWrapper(binPath, numProc, wd)
+    simulation = ConquestWrapper(binPath, numProc, wd, platform)
     coords = coordsAndBoxDims[:-3]
     boxDims = coordsAndBoxDims[-3:]
     coords = coords.reshape((CQr.numAtoms, 3))

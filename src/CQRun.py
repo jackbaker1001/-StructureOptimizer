@@ -9,7 +9,7 @@ Contains: class: ConquestWrapper
 
 class ConquestWrapper(object):
 
-    def __init__(self, binPath, numProc, wd, platform="cluster"):
+    def __init__(self, binPath, numProc, wd, platform):
         self.binPath = binPath
         self.numProc = numProc
         self.wd = wd
