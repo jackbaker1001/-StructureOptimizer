@@ -64,5 +64,5 @@ elif optMethod == "debug":
 if optMethod != "debug":
     opt = minimize(fun = objFunc, x0=initCondit, jac=True,
                    method=optMethod, options=methodOptions)
-    print("minimization terminated)
+    print("minimization terminated")
 

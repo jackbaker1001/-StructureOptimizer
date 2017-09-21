@@ -13,14 +13,13 @@ class ConquestWrapper(object):
         self.binPath = binPath
         self.numProc = numProc
         self.wd = wd
-	self.platform = platform
+        self.platform = platform
 
     def runConquest(self):
         os.chdir(wd)
-	if platform == "cluster":
+        if self.platform == "cluster":
             os.system("mpirun -np %d -map-by node %s" % (self.numProc, self.binPath))
-            os.chdir("../../StructureOptimizer/")
-        elif platform == "Thomas"
+        elif self.platform == "Thomas":
             os.system("gerun %s" % (self.binPath))
 
 if __name__ == "__main__":
