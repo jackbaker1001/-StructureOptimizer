@@ -1,3 +1,12 @@
+"""
+MAIN PROGRAM
+Author: Jack Baker
+Date: 22/09/17
+Description: The main callable program for the Conquest structure
+             optimizer. Set input parameters in input.py and call
+             this script with: python main.py
+"""
+
 from src.CQWriter import ConquestWriter
 from src.CQReader import ConquestReader
 from src.objFuncs import *
@@ -50,7 +59,7 @@ elif optCell and optAtomPos:
 
 # Select method options
 if optMethod == "L-BFGS-B":
-    methodOptions = {"factr": lbfgsb_factr, "ftol": enTol, "gtol": gradTol,
+    methodOptions = {"ftol": enTol, "gtol": gradTol,
                      "disp": True, "maxiter": maxIter}
 elif optMethod == "BFGS" or optMethod == "CG":
     methodOptions = {"gtol": gradTol, "disp": True, "maxiter": maxIter}

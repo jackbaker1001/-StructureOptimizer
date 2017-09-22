@@ -7,9 +7,15 @@ import sys
 import os
 
 """
+OBJECTIVE FUNCTIONS
 Author: Jack Baker
 Date 13/09/17
-Contains: Objective functions to minimize
+Description: Objective functions to minimize. All functions
+            minimize the energy with some gradient (forces or
+            stress or both).
+TODO: Variable cell optimization (simaltaneously with atomic
+     positions) isn't great. Create new objective function like in
+     ONETEP paper on preconditioners.
 """
 
 funcEvals = 0
@@ -65,7 +71,6 @@ def E_atomPos(coords):
     print("\n\n Function Call: %d" % (funcEvals))
     print("Curent forces [Fx, Fy, Fz] (Ha/Bohr):")
     print(CQr.allForces)
-    print("RMS force (Ha/Bohr)")
     print("Maximum force component on MOVING atom (Ha/Bohr)")
     print(np.abs(forces).max())
     print("RMS force of MOVING atoms (Ha/Bohr)")
@@ -83,7 +88,15 @@ def E_atomPosBoxDim(coordsAndBoxDims):
     CQw = ConquestWriter()
     CQr.getCoords()
     simulation = ConquestWrapper(binPath, numProc, wd, platform)
+    conditCoord = np.empty((CQr.numAtoms, 3), dtype=np.float64)
     coords = coordsAndBoxDims[:-3]
+    count = 0
+    for iatom in range(CQr.numAtoms):
+        for ipos in range(3):
+            if CQr.dynamics[iatom, ipos] == True:
+                conditCoord[iatom, ipos] = coords[count]
+                count += 1
+    coords = conditCoord
     boxDims = coordsAndBoxDims[-3:]
     coords = coords.reshape((CQr.numAtoms, 3))
     CQw.writeCoord(dynamics=CQr.dynamics, newCoord=coords, latVec=boxDims)

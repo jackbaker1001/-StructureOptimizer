@@ -1,23 +1,33 @@
+"""
+INPUT FILE FOR CONQUEST STRUCTURE OPTIMIZER
+Author: Jack Baker
+Date: 22/09/17
+Description: A file for specifying all of the parameters
+             for a structure optimization run. See comments
+             above input variable for a description.
+"""
+
+
 
 # Select directory with Conquest files
 wd = "/homes/jbaker/Documents/programming/Conquest/optTests/BFGS_SZP_Tet"
 # Path to desired Conquest binary
 binPath = "~jbaker/bin/Conquest_latest"
-# Number of MPI processes (does nothing on thomas. Defined in .sh script)
+# Number of MPI processes if running on cluster (monoceros, hydra, petrof..)
 numProc = 5
-# Computing platform
+# Computing platform (cluster, Thomas)
 platform = "cluster"
-
-
+# Optimize atomic positions, simulation box or both
 optAtomPos = True
 optCell = False
+# Choose an optimization method (BFGS, L-BFGS-B, CG, NCG)
 optMethod = "BFGS"
+# L-BFGS-B convergence condition is enTol
 enTol = 1e-8
-maxIter = 200
+# CG and BFGS convergence condition is gradTol (forces or stress...)
 gradTol = 1e-5
-
-# L-BFGS-B parameters
-lbfgsb_factr = 1e5
-
-# Newton CG parameters
+# Newton CG  convergence condition is coordTol
+# (relates to atomic tol precison or simulation box tol)
 coordTol = 1e-3
+# Maximum number of iterations for chosen optMethod
+maxIter = 200
