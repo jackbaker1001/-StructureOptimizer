@@ -13,10 +13,10 @@ The code works from extracting energies, forces and stresses from static Conques
 ## How-to
 This code requires a Python 3 installation with numpy and scipy installed.
 
-1. Perform a static calculation on the initial structure to be relaxed. Keep the .chden* files in the directory. Ensure your
-coordinate file has the extension ".in" and that output is directed to Conquest_out.
+1. Perform a static calculation on the initial structure to be relaxed with IO.Iprint set to 2 in Conquest_input. Keep the .chden* files in the directory. Ensure your coordinate file has the extension ".in" and that output is directed to Conquest_out.
 2. Set the parameters you desire in input.py. Comments in this file should help you.
-3. Run python main.py. If on a computing platform operating with .sh job-scripts, ensure the python module with scipy and numpy has been loaded before 
+3. Set General.LoadRho to T to load the previous charge densities (speeding up the SCF).
+4. Run python main.py. If on a computing platform operating with .sh job-scripts, ensure the python module with scipy and numpy has been loaded before 
 the run along with any libraries/modules required to run the Conquest binary.
 
 Energies and gradient information will be printed in the working directory to structureOptimizer.out. 
