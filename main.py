@@ -41,7 +41,6 @@ print("\n CONQUEST STRUCTURE OPTIMIZER \n")
 print("\n By Jack S. Baker - London Centre for Nanotechnology - 2017 \n")
 print("\n Optimize box dimensions: %s  Optimize coordinates: %s \n" % (optCell, optAtomPos))
 print("\n Beginning %s optimization with tolerance: %.10f... \n" % (optMethod, enTol))
-sys.stdout.flush()
 
 # Selecting Objective function to minimize and initial conditions
 if optCell and not optAtomPos:
@@ -50,12 +49,16 @@ if optCell and not optAtomPos:
 elif not optCell and optAtomPos:
     objFunc = E_atomPos
     initCondit = coordInit
-elif optCell and optAtomPos:
+elif optCell and optAtomPos and sameTime:
     coordInit = coordInit.tolist()
     coordInit.extend(boxDimsInit)
     coordBoxDimsInit = np.array(coordInit, dtype=np.float64)
     initCondit = coordBoxDimsInit
     objFunc = E_atomPosBoxDim
+elif optCell and optAtomPos and not sameTime:
+    # Starts with optimizing coordinates. Switches later.
+    objFunc = E_atomPos
+    initCondit = coordInit
 
 # Select method options
 if optMethod == "L-BFGS-B":
@@ -70,7 +73,28 @@ elif optMethod == "debug":
 
 # Enter scipy wrapper for minimizers
 if optMethod != "debug":
-    opt = minimize(fun = objFunc, x0=initCondit, jac=True,
-                   method=optMethod, options=methodOptions)
+    if optCell or optAtomPos:
+        opt = minimize(fun=objFunc, x0=initCondit, jac=True,
+                       method=optMethod, options=methodOptions)
+    elif (optCell and optAtomPos and not sameTime):
+        print("Swapping every %d iterations" % (maxIter))
+        sys.stdout.flush()
+        i = 0
+        while True:
+            opt = minimize(fun=objFunc, x0=initCondit, jac=True,
+                           method=optMethod, options=methodOptions)
+            if i % 2 == 0:
+                print("Switching to optimize simulation box dimensions")
+                objFun = E_boxDims
+                CQr.getCoords()
+                initCondit = np.array([CQr.rCellX, CQr.rCellY, CQr.rCellZ])
+            else:
+                print("Switching to optimize atomic positions")
+                objFun = E_atomPos
+                CQr.getCoords()
+                initCondit = CQr.coordArray
+            i += 1
+            if i >= 10:
+                print("exceeded 10 iterations in switch")
+                break
     print("minimization terminated")
-

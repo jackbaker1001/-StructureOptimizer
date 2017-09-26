@@ -5,6 +5,7 @@ from input import *
 import numpy as np
 import sys
 import os
+import time
 
 """
 OBJECTIVE FUNCTIONS
@@ -21,7 +22,9 @@ TODO: Variable cell optimization (simaltaneously with atomic
 funcEvals = 0
 
 def E_boxDims(boxDims):
+    start = time.time()
     CQr = ConquestReader(wd)
+    CQr.getCoords()
     CQw = ConquestWriter()
     simulation = ConquestWrapper(binPath, numProc, wd, platform)
     CQw.writeCoord(dynamics=CQr.dynamics, writeAtomPos=False, latVec=boxDims)
@@ -31,18 +34,22 @@ def E_boxDims(boxDims):
     CQr.close(closeCoords=False)
     global funcEvals
     funcEvals += 1
+    end = time.time()
+    iterTime = start - end
     print("\n\n Function Call: %d" % (funcEvals))
     print("Current Box dims:")
     print(boxDims)
     print("Current stress")
     print(CQr.stress)
     print("Total Energy = %.8f Ha" % (CQr.E))
+    print("Time for iteration: %.5fs" % (iterTime))
     sys.stdout.flush()
     return CQr.E, CQr.stress
 
 
 def E_atomPos(coords):
     # This function takes the coordinates in a flattened format
+    start = time.time()
     global funcEvals
     funcEvals += 1
     CQr = ConquestReader(wd)
@@ -68,6 +75,8 @@ def E_atomPos(coords):
     rmsForce = np.sqrt(np.mean(forces*forces))
     CQr.close(closeCoords=False)
     fracCoords = coords/np.array([CQr.rCellX, CQr.rCellY, CQr.rCellZ])
+    end = time.time()
+    iterTime = end - start
     print("\n\n Function Call: %d" % (funcEvals))
     print("Curent forces [Fx, Fy, Fz] (Ha/Bohr):")
     print(CQr.allForces)
@@ -76,6 +85,7 @@ def E_atomPos(coords):
     print("RMS force of MOVING atoms (Ha/Bohr)")
     print(rmsForce)
     print("Total Energy = %.8f Ha" % (CQr.E))
+    print("Time for iteration: %.5fs" % (iterTime))
     #os.system("cat " + wd + "/Conquest_out >> " + wd + "/CQOutHistory")
     # return flattened gradient information also
     sys.stdout.flush()
@@ -84,6 +94,7 @@ def E_atomPos(coords):
 
 def E_atomPosBoxDim(coordsAndBoxDims):
     # This function takes the coordinates in a flattened format
+    start = time.time()
     CQr = ConquestReader(wd)
     CQw = ConquestWriter()
     CQr.getCoords()
@@ -109,6 +120,8 @@ def E_atomPosBoxDim(coordsAndBoxDims):
     rmsForce = np.sqrt(np.mean(forces*forces))
     global funcEvals
     funcEvals += 1
+    end = time.time()
+    iterTime = end - start
     print("\n\n Function Call: %d" % (funcEvals))
     print("Current Box dims (Bohr) and coordinates (fractional):")
     print(boxDims)
@@ -120,6 +133,7 @@ def E_atomPosBoxDim(coordsAndBoxDims):
     print("RMS force (Ha/Bohr)")
     print(rmsForce)
     print("Total Energy = %.8f Ha" % (CQr.E))
+    print("Time for iteration: %.5fs" % (iterTime))
     forcesAndStress = forces
     forcesAndStress = forcesAndStress.tolist()
     forcesAndStress.extend(CQr.stress.tolist())
