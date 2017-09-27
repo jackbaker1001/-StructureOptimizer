@@ -55,10 +55,6 @@ elif optCell and optAtomPos and sameTime:
     coordBoxDimsInit = np.array(coordInit, dtype=np.float64)
     initCondit = coordBoxDimsInit
     objFunc = E_atomPosBoxDim
-elif optCell and optAtomPos and not sameTime:
-    # Starts with optimizing coordinates. Switches later.
-    objFunc = E_atomPos
-    initCondit = coordInit
 
 # Select method options
 if optMethod == "L-BFGS-B":
@@ -73,7 +69,9 @@ elif optMethod == "debug":
 
 # Enter scipy wrapper for minimizers
 if optMethod != "debug":
-    if optCell or optAtomPos:
+    if  not (optCell and optAtomPos):
+        sys.stdout.flush()
+        print("Single minimization")
         opt = minimize(fun=objFunc, x0=initCondit, jac=True,
                        method=optMethod, options=methodOptions)
     elif (optCell and optAtomPos and not sameTime):
@@ -81,18 +79,32 @@ if optMethod != "debug":
         sys.stdout.flush()
         i = 0
         while True:
-            opt = minimize(fun=objFunc, x0=initCondit, jac=True,
-                           method=optMethod, options=methodOptions)
-            if i % 2 == 0:
-                print("Switching to optimize simulation box dimensions")
-                objFun = E_boxDims
+            if i % 2 != 0:
+                print("Optimizing simulation box dimensions")
+                objFunc = E_boxDims
                 CQr.getCoords()
                 initCondit = np.array([CQr.rCellX, CQr.rCellY, CQr.rCellZ])
+                opt = minimize(fun=objFunc, x0=initCondit, jac=True,
+                              method=optMethod, options=methodOptions)
             else:
-                print("Switching to optimize atomic positions")
-                objFun = E_atomPos
+                print("Optimizing atomic positions")
+                objFunc = E_atomPos
                 CQr.getCoords()
-                initCondit = CQr.coordArray
+                coordInit = CQr.coordArray
+                boxDimsInit = np.array([CQr.rCellX, CQr.rCellY, CQr.rCellZ])
+                coord = coordInit*boxDimsInit
+                coordInit = []
+                # Initial selective dynamics
+                for iatom in range(CQr.numAtoms):
+                    for ipos in range(3):
+                        if CQr.dynamics[iatom, ipos] == True:
+                            coordInit.append(coord[iatom, ipos])
+                coordInit = np.array(coordInit, dtype=np.float64)
+                #CQr.getCoords()
+                initCondit = coordInit
+                print(initCondit)
+                opt = minimize(fun=objFunc, x0=initCondit, jac=True,
+                               method=optMethod, options=methodOptions)
             i += 1
             if i >= 10:
                 print("exceeded 10 iterations in switch")

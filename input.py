@@ -10,7 +10,7 @@ Description: A file for specifying all of the parameters
 
 
 # Select directory with Conquest files
-wd = "/homes/jbaker/Documents/programming/Conquest/optTests/LDA_tet_DZP_pto"
+wd = "/homes/jbaker/Documents/programming/Conquest/optTests/BFGS_SZP_Tet"
 # Path to desired Conquest binary
 binPath = "~jbaker/bin/Conquest_latest"
 # Number of MPI processes if running on cluster (monoceros, hydra, petrof..)
@@ -18,7 +18,7 @@ numProc = 5
 # Computing platform (cluster, Thomas)
 platform = "cluster"
 # Optimize atomic positions, simulation box or both
-optAtomPos = False
+optAtomPos = True
 optCell = True
 sameTime = False
 # Choose an optimization method (BFGS, L-BFGS-B, CG, NCG)
@@ -26,9 +26,9 @@ optMethod = "BFGS"
 # L-BFGS-B convergence condition is enTol
 enTol = 1e-8
 # CG and BFGS convergence condition is gradTol (forces or stress...)
-gradTol = 1e-3
+gradTol = 1e-4
 # Newton CG  convergence condition is coordTol
 # (relates to atomic tol precison or simulation box tol)
 coordTol = 1e-3
 # Maximum number of iterations for chosen optMethod
-maxIter = 20
+maxIter = 15
